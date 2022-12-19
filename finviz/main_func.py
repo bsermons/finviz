@@ -107,7 +107,12 @@ def get_news(ticker):
     results = []
     date = None
     for row in rows:
-        raw_timestamp = row.xpath("./td")[0].xpath("text()")[0][0:-2]
+        row_tup = row.xpath("./td")
+        raw_timestamp = row_tup[0].xpath("text()")[0]
+
+        # This row is finviz ad and doesn't have this class
+        if not row_tup[1].cssselect('a[class="tab-link-news"]'):
+            continue
 
         if len(raw_timestamp) > 8:
             parsed_timestamp = datetime.strptime(raw_timestamp, "%b-%d-%y %I:%M%p")
